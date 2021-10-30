@@ -38,6 +38,8 @@ async function run() {
 			console.log(result, place);
 		});
 
+		//DELETE PLACE
+
 		//GET A SINGLE DATA
 		app.get('/booking/:id', async (req, res) => {
 			const id = req.params.id;
@@ -60,6 +62,25 @@ async function run() {
 			const cursor = bookingInfoCollection.find({});
 			const result = await cursor.toArray();
 			res.send(result);
+		});
+
+		//GET USER BOOKING INFO
+		app.get('/bookingInfos/:email', async (req, res) => {
+			const query = { email: req.params.email };
+			const cursor = bookingInfoCollection.find(query);
+			const result = await cursor.toArray();
+			res.send(result);
+			// console.log(result);
+		});
+
+		//DELETE BOOKING INFO
+		app.delete('/bookingInfos/:id', async (req, res) => {
+			const id = req.params.id;
+			console.log(id);
+			const query = { _id: ObjectId(id) };
+			const result = await bookingInfoCollection.deleteOne(query);
+			res.send(result);
+			console.log(query, id);
 		});
 	} finally {
 		// await client.close()
