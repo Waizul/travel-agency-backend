@@ -35,10 +35,17 @@ async function run() {
 			const place = req.body;
 			const result = await placeCollection.insertOne(place);
 			res.send(result);
-			console.log(result, place);
+			// console.log(result, place);
 		});
 
 		//DELETE PLACE
+		app.delete('/places/:id', async (req, res) => {
+			const id = req.params.id;
+			const query = { _id: ObjectId(id) };
+			const result = await placeCollection.deleteOne(query);
+			res.send(result);
+			// console.log(query, id, result);
+		});
 
 		//GET A SINGLE DATA
 		app.get('/booking/:id', async (req, res) => {
@@ -64,6 +71,24 @@ async function run() {
 			res.send(result);
 		});
 
+		//UPDATE BOOKING INFO
+		app.put('/bookingInfos/:id', async (req, res) => {
+			const id = req.params.id;
+			console.log(id);
+			const filter = { _id: ObjectId(id) };
+			const options = { upsert: true };
+			const updateDoc = {
+				$set: {
+					status: confirmed,
+				},
+			};
+			const result = await bookingInfoCollection.updateOne(
+				filter,
+				updateDoc,
+				options,
+			);
+			res.send(result);
+		});
 		//GET USER BOOKING INFO
 		app.get('/bookingInfos/:email', async (req, res) => {
 			const query = { email: req.params.email };
@@ -80,7 +105,7 @@ async function run() {
 			const query = { _id: ObjectId(id) };
 			const result = await bookingInfoCollection.deleteOne(query);
 			res.send(result);
-			console.log(query, id);
+			// console.log(query, id);
 		});
 	} finally {
 		// await client.close()
